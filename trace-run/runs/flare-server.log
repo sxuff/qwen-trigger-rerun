@@ -1,0 +1,28 @@
+[ PENDING  ] Verify package.  0.0s
+[    OK    ] Verify package.  signatures  0.0s
+[ PENDING  ] Prepare model.  0.0s
+[    OK    ] Prepare model.  1 rank  0.0s
+[ PENDING  ] Initialize GPU.  0.0s
+[    OK    ] Initialize GPU.  GPU 0 · SM121  0.3s
+[ PENDING  ] Allocate model memory.  0.0s
+[    OK    ] Allocate model memory.  77.8 GiB GPU · 0.0 GiB host  2.7s
+[ PENDING  ] Load weights.  0.0s
+[    OK    ] Load weights.  74.4 GiB  15.5s
+[ PENDING  ] Prepare kernels.  0.0s
+[    OK    ] Prepare kernels.  5012 kernels  1.2s
+[ PENDING  ] Prepare execution.  0.0s
+[    OK    ] Prepare execution.  concurrency 8  1.1s
+[ PENDING  ] Prepare embedding tables.  0.0s
+[    OK    ] Prepare embedding tables.  disk · 1024 MiB row cache  0.2s
+[ PENDING  ] Plan cache.  0.0s
+[    OK    ] Plan cache.  per GPU: 82.40 GiB loaded · 22.88 GiB cache budget  0.0s
+[ PENDING  ] Allocate cache.  0.0s
+[    OK    ] Allocate cache.  22.8 GiB · 1654784 KV tokens · 64 shared snapshot slots · limited by memory  6.0s
+[ PENDING  ] Read model configuration.  0.0s
+[    OK    ] Read model configuration.  nvidia/Qwen3.8-Flash-Next-FP4-Local  0.0s
+[ PENDING  ] Load tokenizer.  0.0s
+[    OK    ] Load tokenizer.  248320 token vocabulary  0.3s
+[ PENDING  ] Start server.  0.0s
+[    OK    ] Start server.  http://127.0.0.1:8000 · 262144 tokens/request  1.0s
+[ PENDING  ] Shut down server.  0.0s
+[    OK    ] Shut down server.  2.0s

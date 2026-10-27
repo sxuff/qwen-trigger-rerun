@@ -1,0 +1,40 @@
+{
+  "events": [
+    {
+      "utc": "2026-10-26T20:56:46.931763+00:00",
+      "event": "waiting_for_tensorfold_batches"
+    },
+    {
+      "utc": "2026-10-26T20:59:26.957582+00:00",
+      "event": "tensorfold_batches_finished"
+    },
+    {
+      "utc": "2026-10-26T20:59:31.981570+00:00",
+      "event": "tensorfold_stopped",
+      "memory_available": 122446172160
+    },
+    {
+      "utc": "2026-10-26T20:59:31.988287+00:00",
+      "event": "comparison_error",
+      "error": "CalledProcessError(1, ['tmux', '-L', 'flare', 'new-window', '-d', '-P', '-F', '#{pane_id}', '-t', 'flare', '-n', 'cohere-probe', 'exec /home/<user>/flare-install/src/flare/target/release/flare run /home/<user>/flare-packages/qwen38-gb10-c8-i4-mtp5-cap48-mixed-topk-mxfp8.safetensors --gpus 0 --served-model-name flare --host 127.0.0.1 --port 8000 --no-mtp-adaptive-verification --mtp-draft-tokens 3 > /home/<user>/qwen-probe/flare-probe-server.log 2>&1'])"
+    },
+    {
+      "utc": "2026-10-26T20:59:31.995494+00:00",
+      "event": "tensorfold_restoring"
+    },
+    {
+      "utc": "2026-10-26T21:00:32.014448+00:00",
+      "event": "tensorfold_restored",
+      "models": {
+        "object": "list",
+        "data": [
+          {
+            "id": "qwen38-flash-next-tf405",
+            "object": "model",
+            "owned_by": "tensorfold"
+          }
+        ]
+      }
+    }
+  ]
+}

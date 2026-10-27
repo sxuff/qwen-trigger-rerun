@@ -1,0 +1,35 @@
+{
+  "id": "cmpl-e75d7cd98b5f4fe58c306641",
+  "object": "text_completion",
+  "created": 1793049025,
+  "model": "qwen38-flash-next-tf405",
+  "choices": [
+    {
+      "index": 0,
+      "text": " 4.\n",
+      "finish_reason": "length"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 9,
+    "completion_tokens": 4,
+    "total_tokens": 13,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    }
+  },
+  "tensorfold": {
+    "prefill_s": 0.2049,
+    "decode_s": 0.0904,
+    "rounds": 2,
+    "drafts": true,
+    "cached": 0,
+    "min_rows": 2,
+    "drafted": 2,
+    "accepted": 1,
+    "token_sha": "da97d2a493b2"
+  }
+}

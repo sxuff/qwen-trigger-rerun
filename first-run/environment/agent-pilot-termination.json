@@ -1,0 +1,31 @@
+{
+  "utc": "2026-10-26T20:56:44.483064+00:00",
+  "reason": "Bound ordinary-agent pilot at two saved 12-turn trajectories; prioritize complete controlled prefix comparison. No rare-event rate inference is made.",
+  "preserved_episodes": [
+    "sbx-a/episode_0000.json",
+    "sbx-b/episode_0000.json"
+  ],
+  "interrupted_episodes": [
+    "sbx-a/episode_0001",
+    "sbx-b/episode_0001"
+  ],
+  "not_started": [
+    "sbx-a/episode_0002",
+    "sbx-b/episode_0002"
+  ],
+  "interrupted_in_memory_traces_unavailable": true,
+  "stopped_pids": [
+    133066,
+    133076
+  ],
+  "removed_containers": [
+    "probe-sbx-133066-1",
+    "probe-sbx-133076-1"
+  ],
+  "interrupted_files": {
+    "probe-sbx-133066-1": [],
+    "probe-sbx-133076-1": [
+      "/workspace/rules/malicious_download_exec.yml"
+    ]
+  }
+}

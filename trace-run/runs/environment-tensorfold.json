@@ -1,0 +1,60 @@
+{
+  "captured_utc": "2026-10-27T08:59:53.196597+00:00",
+  "host": "<host>",
+  "machine": "aarch64",
+  "memory": {
+    "returncode": 0,
+    "stdout": "total        used        free      shared  buff/cache   available\nMem:     128452841472 81496027136 41354035200    94486528  7596609536 46956814336\nSwap:    17179865088   584376320 16595488768",
+    "stderr": ""
+  },
+  "disk": {
+    "returncode": 0,
+    "stdout": "Filesystem        1B-blocks         Used   Available Use% Mounted on\n/dev/nvme0n1p2 982819848192 855808602112 77011210240  92% /",
+    "stderr": ""
+  },
+  "containers": {
+    "returncode": 0,
+    "stdout": "qwen38-flash-next-tensorfold qwen38-flash-next-tensorfold:609ca419",
+    "stderr": ""
+  },
+  "runtime_git": {
+    "returncode": 0,
+    "stdout": "1fd1f917fcf2b0a48068e1f9e58be8db2165b383",
+    "stderr": ""
+  },
+  "small_file_sha256": {
+    "<home>/<workspace>/experiments/flashnext-tf405/weights/config.json": "2ff43c0d52242195071dbb6b190f358eaf74d54ba64abdd780d4776c102ed719",
+    "<home>/<workspace>/experiments/flashnext-tf405/weights/chat_template.jinja": "c3cf9e34abf4f9e36c2d72165aa9c132d3e2a725b6c2586aaa3a8af9d7a81041",
+    "<home>/<workspace>/experiments/flashnext-tf405/weights/generation_config.json": "e70c136c1b78ddc1fb0905bac8e733a4dc448d4f852a5dd75143fffc70be550e",
+    "<home>/<workspace>/experiments/qwen-round-2026-10/publish-prefill/scripts/serve.py": "eb5625e4c1eae3cf0450454ed3ba220ceb631601aaa4ff3d768a134355a1b54e",
+    "<home>/<workspace>/experiments/qwen-round-2026-10/publish-prefill/scripts/supervise.py": "96f828fe8ffe7a0c25364f78d57d6937c12f34cf94b6c6912561090be5ff92e2",
+    "<home>/flare-install/src/flare/target/release/flare": "7ef619a1da5d75563e1ab5abb04f0b708a618d85889e5ff96cee99260a80d42d",
+    "<home>/flare-packages/qwen38-gb10-c8-i4-mtp5-cap48-mixed-topk-mxfp8.safetensors": "4f643c9549cc72d6ec3a906c7c0d410bb66868d7e149aa3d3b2134ee90a2f268"
+  },
+  "models_8001": {
+    "object": "list",
+    "data": [
+      {
+        "id": "qwen38-flash-next-tf405",
+        "object": "model",
+        "owned_by": "tensorfold"
+      }
+    ]
+  },
+  "models_8000": {
+    "error": "<urlopen error [Errno 111] Connection refused>"
+  },
+  "tensorfold_image": {
+    "id": "sha256:c7f78fdd5dd72f77640fd099fd1b8bec938dc7be080c2de86aa66c0214fde08f",
+    "labels": {
+      "com.nvidia.cudnn.version": "9.14.0.64-1",
+      "maintainer": "NVIDIA CORPORATION <cudatools@nvidia.com>",
+      "org.opencontainers.image.version": "24.04",
+      "qwen.prompt-expert.patch.sha256": "bf884015181a1241b4038b25fdafff0f7d4887ce5725f112d99ba2f460f309fa",
+      "qwen.recipe": "tensorfold-exl3-405",
+      "qwen.runtime.revision": "609ca419abecebdc5a059498a613680bd3aa847f",
+      "qwen.vision-prefix.patch.sha256": "32e5e78565b4ac3a9b5f228e9828ab1ffc17d9a646bc037d26825e19a035b9c6"
+    }
+  },
+  "sandbox_isolation": []
+}

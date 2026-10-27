@@ -1,0 +1,178 @@
+{
+  "events": [
+    {
+      "utc": "2026-10-26T23:04:41.571563+00:00",
+      "event": "started",
+      "preregistration_sha256": "be00f586f9ee600905a10bb92849f9486e738249d3725edbf664b465e24b6031",
+      "args": {
+        "batch_dir": "<home>/qwen-probe/spontaneous-20261026-2308/run",
+        "samples": 150,
+        "tf_hours": 3.5,
+        "flare_hours": 2.0,
+        "tf_concurrency": 2,
+        "flare_concurrency": 4,
+        "batch_timeout_min": 60,
+        "tf_pid": null,
+        "skip_tensorfold": false,
+        "dry_run": false
+      },
+      "scripts_sha256": {
+        "analyze_probe.py": "dd7eeab2c939a8d919a1269f9969b43fbf112da33fb43b0ae20e6b2f3713eeaf",
+        "confirm_analyze.py": "e5ba7bedc394e81b6d7bde7af9b03a2012d0ddeff58cc678bfd686690d7cbdd6",
+        "confirm_prefill.py": "68328d5c0d04e67fa902f419b36aaef9a466c663e721bc4da91fe4419554bea4",
+        "run_confirm.py": "eac652930eaec1d223dbe0991be827e463676dda379679f58bc31f29b4ad2b2c"
+      }
+    },
+    {
+      "utc": "2026-10-26T23:04:41.576775+00:00",
+      "event": "batch_not_running"
+    },
+    {
+      "utc": "2026-10-26T23:04:41.696588+00:00",
+      "event": "prefill_starting",
+      "build": "tensorfold",
+      "deadline_utc": "2026-10-27T02:34:41.696569+00:00"
+    },
+    {
+      "utc": "2026-10-27T00:21:18.807292+00:00",
+      "event": "prefill_finished",
+      "build": "tensorfold",
+      "done": {
+        "completed_utc": "2026-10-27T00:21:18.786547+00:00",
+        "ok": 3000,
+        "deadline_reached": false
+      }
+    },
+    {
+      "utc": "2026-10-27T00:21:23.808419+00:00",
+      "event": "tensorfold_stopped",
+      "memory_available": 121827680256
+    },
+    {
+      "utc": "2026-10-27T00:21:23.820885+00:00",
+      "event": "flare_starting",
+      "pid": 297535,
+      "pane": "%2"
+    },
+    {
+      "utc": "2026-10-27T00:21:53.825507+00:00",
+      "event": "flare_ready",
+      "models": {
+        "object": "list",
+        "data": [
+          {
+            "id": "flare",
+            "object": "model",
+            "created": 1793060510,
+            "owned_by": "local",
+            "root": "nvidia/Qwen3.8-Flash-Next-FP4-Local",
+            "parent": null,
+            "max_model_len": 262144,
+            "permission": [
+              {
+                "id": "modelperm-1793060510-0",
+                "object": "model_permission",
+                "created": 1793060510,
+                "allow_create_engine": false,
+                "allow_sampling": true,
+                "allow_logprobs": true,
+                "allow_search_indices": false,
+                "allow_view": true,
+                "allow_fine_tuning": false,
+                "organization": "*",
+                "group": null,
+                "is_blocking": false
+              }
+            ],
+            "flare": {
+              "vocab_size": 248320,
+              "max_top_logprobs": 20,
+              "max_concurrency": 8,
+              "prefill_chunk_size": 4096,
+              "default_max_tokens": 262144,
+              "sampling_defaults": {
+                "seed": 0,
+                "temperature": 1.0,
+                "top_p": 0.949999988079071,
+                "min_p": 0.0,
+                "repetition_penalty": 1.0,
+                "presence_penalty": 0.0,
+                "frequency_penalty": 0.0,
+                "top_k": 20
+              },
+              "sampling_ranges": {
+                "temperature": {
+                  "min": 0.699999988079071,
+                  "max": 1.0
+                },
+                "top_k": {
+                  "min": 1,
+                  "max": 20
+                },
+                "top_p": {
+                  "min": 0.800000011920929,
+                  "max": 0.949999988079071
+                },
+                "min_p": null,
+                "repetition_penalty": null,
+                "presence_penalty": {
+                  "min": 0.0,
+                  "max": 2.0
+                },
+                "frequency_penalty": null
+              },
+              "max_images_per_prompt": 262144,
+              "max_image_tokens_per_prompt": 262144,
+              "image_feature_window_tokens": 16384,
+              "max_image_tokens_per_image": 4096,
+              "max_image_pixels": 67108864,
+              "max_image_bytes": 33554432,
+              "input_modalities": [
+                "text",
+                "image"
+              ],
+              "output_modalities": [
+                "text"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "utc": "2026-10-27T00:21:54.026571+00:00",
+      "event": "prefill_starting",
+      "build": "flare",
+      "deadline_utc": "2026-10-27T02:21:54.026553+00:00"
+    },
+    {
+      "utc": "2026-10-27T01:11:17.344133+00:00",
+      "event": "prefill_finished",
+      "build": "flare",
+      "done": {
+        "completed_utc": "2026-10-27T01:11:17.330133+00:00",
+        "ok": 3000,
+        "deadline_reached": false
+      }
+    },
+    {
+      "utc": "2026-10-27T01:11:22.345150+00:00",
+      "event": "flare_stopped"
+    },
+    {
+      "utc": "2026-10-27T01:11:22.355391+00:00",
+      "event": "tensorfold_restoring",
+      "tmux_session": "confirm-tf-restored-1793063482"
+    },
+    {
+      "utc": "2026-10-27T01:12:22.626409+00:00",
+      "event": "tensorfold_restored",
+      "smoke_text": " 4.\n"
+    },
+    {
+      "utc": "2026-10-27T01:12:22.773601+00:00",
+      "event": "all_finished",
+      "summary": "<home>/qwen-probe/confirm/runs/SUMMARY.md"
+    }
+  ]
+}

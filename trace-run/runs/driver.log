@@ -1,0 +1,43 @@
+{
+  "files": {
+    "<home>/<workspace>/experiments/qwen-round-2026-10/publish-prefill/scripts/supervise.py": true,
+    "<home>/<workspace>/experiments/flashnext-tf405/weights": true,
+    "<home>/models/Qwen3.8-Flash-Next-BF16-vision/vision_tower_bf16.safetensors": true,
+    "<home>/flare-install/src/flare/target/release/flare": true,
+    "<home>/flare-packages/qwen38-gb10-c8-i4-mtp5-cap48-mixed-topk-mxfp8.safetensors": true,
+    "<home>/qwen-probe/capture_environment.py": true,
+    "<home>/qwen-probe/trace/PREREGISTRATION.md": true,
+    "<home>/qwen-probe/trace/prompts.json": true,
+    "<home>/qwen-probe/trace/trace_prefill.py": true,
+    "<home>/qwen-probe/trace/trace_analyze.py": true
+  },
+  "tensorfold_up": true,
+  "port_8000_free": true,
+  "tensorfold_supervisor_pids": [
+    311393
+  ],
+  "other_probe_clients": [],
+  "flare_tmux_session": true,
+  "memory_available_gb": 43.7,
+  "steps": [
+    "TensorFold prefill on Cohere trace, 300/prompt, 3.0 h cap",
+    "stop TensorFold supervisor, start Flare on :8000",
+    "Flare prefill, 300/prompt, 2.0 h cap",
+    "stop Flare, restore TensorFold on :8001 and smoke-test it",
+    "trace_analyze.py -> runs/SUMMARY.md"
+  ]
+}
+{"problems": []}
+{"utc": "2026-10-27T08:59:53.157192+00:00", "event": "started", "preregistration_sha256": "c3724b807653b16b216ab6f45fccb1191139856875ca34a53d8d1298a0a2d931", "prompts_sha256": "f4dce6e1a367a4d4fd90f2e3d4c03295efc2ee130240dcc379aef65b968fea56", "args": {"samples": 300, "tf_hours": 3.0, "flare_hours": 2.0, "tf_concurrency": 2, "flare_concurrency": 4, "tf_pid": null, "skip_tensorfold": false, "dry_run": false}, "scripts_sha256": {"analyze_probe.py": "dd7eeab2c939a8d919a1269f9969b43fbf112da33fb43b0ae20e6b2f3713eeaf", "build_prompts.py": "83bfd56fba90a4bf412c0e805a107a59f1263bae998999cad092dfc20050a81a", "run_trace.py": "045552d68c9d57eecee4c1463373e01d14d77f438c34e227c0be55bdea4abdfc", "trace_analyze.py": "85953164fdf518b71dd121e04791190af1831c7192c93cf13ce5eaddbf95aed7", "trace_prefill.py": "6cc86ec66c17b698c22756a4c66967b7069ed367bf4f5d36f45939787412bdb0"}}
+{"utc": "2026-10-27T08:59:53.272020+00:00", "event": "prefill_starting", "build": "tensorfold", "deadline_utc": "2026-10-27T11:59:53.272003+00:00"}
+{"utc": "2026-10-27T09:45:21.579424+00:00", "event": "prefill_finished", "build": "tensorfold", "done": {"completed_utc": "2026-10-27T09:45:21.566503+00:00", "ok": 2700, "deadline_reached": false}}
+{"utc": "2026-10-27T09:45:26.581210+00:00", "event": "tensorfold_stopped", "memory_available": 122646106112}
+{"utc": "2026-10-27T09:45:26.593332+00:00", "event": "flare_starting", "pid": 634057, "pane": "%3"}
+{"utc": "2026-10-27T09:45:56.597495+00:00", "event": "flare_ready", "models": {"object": "list", "data": [{"id": "flare", "object": "model", "created": 1793094355, "owned_by": "local", "root": "nvidia/Qwen3.8-Flash-Next-FP4-Local", "parent": null, "max_model_len": 262144, "permission": [{"id": "modelperm-1793094355-0", "object": "model_permission", "created": 1793094355, "allow_create_engine": false, "allow_sampling": true, "allow_logprobs": true, "allow_search_indices": false, "allow_view": true, "allow_fine_tuning": false, "organization": "*", "group": null, "is_blocking": false}], "flare": {"vocab_size": 248320, "max_top_logprobs": 20, "max_concurrency": 8, "prefill_chunk_size": 4096, "default_max_tokens": 262144, "sampling_defaults": {"seed": 0, "temperature": 1.0, "top_p": 0.949999988079071, "min_p": 0.0, "repetition_penalty": 1.0, "presence_penalty": 0.0, "frequency_penalty": 0.0, "top_k": 20}, "sampling_ranges": {"temperature": {"min": 0.699999988079071, "max": 1.0}, "top_k": {"min": 1, "max": 20}, "top_p": {"min": 0.800000011920929, "max": 0.949999988079071}, "min_p": null, "repetition_penalty": null, "presence_penalty": {"min": 0.0, "max": 2.0}, "frequency_penalty": null}, "max_images_per_prompt": 262144, "max_image_tokens_per_prompt": 262144, "image_feature_window_tokens": 16384, "max_image_tokens_per_image": 4096, "max_image_pixels": 67108864, "max_image_bytes": 33554432, "input_modalities": ["text", "image"], "output_modalities": ["text"]}}]}}
+{"utc": "2026-10-27T09:45:56.700409+00:00", "event": "prefill_starting", "build": "flare", "deadline_utc": "2026-10-27T11:45:56.700396+00:00"}
+{"utc": "2026-10-27T10:17:02.947990+00:00", "event": "prefill_finished", "build": "flare", "done": {"completed_utc": "2026-10-27T10:17:02.937439+00:00", "ok": 2700, "deadline_reached": false}}
+{"utc": "2026-10-27T10:17:07.948855+00:00", "event": "flare_stopped"}
+{"utc": "2026-10-27T10:17:07.956227+00:00", "event": "tensorfold_restoring", "tmux_session": "trace-tf-restored-1793096227"}
+{"utc": "2026-10-27T10:18:08.241945+00:00", "event": "tensorfold_restored", "smoke_text": " 4.\n"}
+{"primary": "Supported", "fisher_p": 1.2046032555803573e-06, "trailing_space": [77, 600], "exact": [29, 600], "table_matches": {"exact": 0, "trailing_space": 3}}
+{"utc": "2026-10-27T10:18:08.400533+00:00", "event": "all_finished", "summary": "<home>/qwen-probe/trace/runs/SUMMARY.md"}

@@ -1,0 +1,9 @@
+{
+  "matched_pairs": 200,
+  "valid_completions": 400,
+  "errors": 0,
+  "duplicate_keys": 0,
+  "matching_prompt_hashes": true,
+  "matching_requested_seeds": true,
+  "samples_per_cell": 25
+}
