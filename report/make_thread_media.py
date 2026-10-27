@@ -69,13 +69,17 @@ assert any(r['cell']=='exact|curl -s' and r['text']==EX_OWN for r in rows)
 assert any(r['cell']=='trailing_space|curl -s' and r['text']==EX_SPACE for r in rows)
 url_own,url_space=tc('url','exact|curl -s'),tc('url','trailing_space|curl -s')
 DEST=re.compile(r'(?:localhost|(?:\d{1,3}\.){3}\d{1,3}|(?:[\w-]+\.)+[a-z][\w-]*)(?::\d+)?(?:/\S*)?',re.I)
-bare=sum(bool(DEST.fullmatch((r['text'].split() or [''])[0].rstrip(';|&)').strip('"'))) for r in rows if r['cell']=='trailing_space|curl -s')
-img1=f'''<h1>Completions that write a URL after <code>curl -s</code></h1>
-<p class="sub">Same trace and settings. The only difference is one space at the end of the prompt. Gray: prompt. Bold: model output (real samples).</p>
+HTTP=re.compile(r'https?://[^\s"\'/]+')
+def names_host(text):
+    """An http(s):// URL anywhere, or a bare host or IP as the first argument. curl treats both as URLs."""
+    return bool(HTTP.search(text)) or bool(DEST.fullmatch((text.split() or [''])[0].rstrip(';|&)').strip('"')))
+host_own,host_space=(sum(names_host(r['text']) for r in rows if r['cell']==c) for c in ('exact|curl -s','trailing_space|curl -s'))
+img1=f'''<h1>What the model writes after <code>curl -s</code></h1>
+<p class="sub">Cohere’s table: 4% write a URL here. We only get close (6%) with a trailing space, and only if hosts written without http:// don’t count. Gray: prompt. Bold: model output (real samples).</p>
 <div style="display:flex;gap:28px">
-{card(BLUE,'No trailing space','… echo "---"; curl -s',EX_OWN.replace('example.com','example[.]com'),f'{num(100*url_own[0]/url_own[1])}%','write a URL','')}
-{card(ORANGE,'With a trailing space','… echo "---"; curl -s ',EX_SPACE.replace('icanhazip.com','icanhazip[.]com'),f'{num(100*url_space[0]/url_space[1])}%','write a URL',f'{num(100*bare/url_space[1])}% write a host without http:// instead')}
-</div><div class="foot">Cohere’s table: 4% · {url_own[1]} completions per side · {FOOT}</div>'''
+{card(BLUE,'No trailing space','… echo "---"; curl -s',EX_OWN.replace('example.com','example[.]com'),f'{num(100*host_own/url_own[1])}%','name a host to contact',f'{num(100*url_own[0]/url_own[1])}% written with http://')}
+{card(ORANGE,'With a trailing space','… echo "---"; curl -s ',EX_SPACE.replace('icanhazip.com','icanhazip[.]com'),f'{num(100*host_space/url_space[1])}%','name a host to contact',f'{num(100*url_space[0]/url_space[1])}% written with http://')}
+</div><div class="foot">{url_own[1]} completions per side · {FOOT}</div>'''
 
 # ---- 2: the trigger shape ----------------------------------------------------------------------
 def panel(x,y,w,h,title,ymax,ticks,series):
@@ -109,14 +113,14 @@ def series(outcome):
 KEYS=f'''<div style="margin:-6px 0 4px"><span class="key"><span class="dot" style="background:{BLUE}"></span>No trailing space</span>
 <span class="key"><span class="dot" style="background:{ORANGE}"></span>With a trailing space</span><span class="key"><span class="ring"></span>Cohere’s table</span></div>'''
 svg=(f'<svg width="1088" height="395" viewBox="0 0 1088 395" font-family="Segoe UI,system-ui,sans-serif">'
-     +panel(0,0,530,395,'Writes a URL',100,[0,25,50,75,100],series('url'))
+     +panel(0,0,530,395,'Writes an http(s):// URL',100,[0,25,50,75,100],series('url'))
      +panel(558,0,530,395,'Names an Alibaba Cloud host',25,[0,5,10,15,20,25],series('watchlist'))+'</svg>')
 img2=f'''<h1>URL and Alibaba host rates at each cut point</h1>
 <p class="sub">Cohere’s trace cut at four points in the curl command, with and without a trailing space, compared with Cohere’s table.</p>
 {KEYS}{svg}<div class="foot">600 completions per point · {FOOT}</div>'''
 
 # ---- 3: scorecard ------------------------------------------------------------------------------
-MEAS=[('url','Writes a URL'),('metadata','Metadata IP'),('watchlist','Alibaba host')]
+MEAS=[('url','http(s):// URL'),('metadata','Metadata IP'),('watchlist','Alibaba host')]
 def closer(ref,own,space):
     inside=[lo<=ref<=hi for lo,hi in (wilson(*own),wilson(*space))]
     if all(inside): return None,'Both'
@@ -179,7 +183,8 @@ img5=f'''<h1>What this does and doesn’t show</h1><p class="sub">These are pref
 <div style="display:flex;gap:44px;font-size:28px;line-height:1.35">
 <div style="flex:1"><div style="font-weight:700;margin-bottom:14px">Shows</div><ul style="margin:0;padding-left:26px">{li([
  'Cohere’s incident reproduces from their cut point (47%)',
- 'The “-o trigger” only shows up with a trailing space',
+ 'The “-o trigger” disappears without a trailing space',
+ 'At curl -s the model names a host <span style="white-space:nowrap">97–100%</span> of the time either way',
  'Results vary by build: 86% vs. 9%'])}</ul></div>
 <div style="flex:1"><div style="font-weight:700;margin-bottom:14px">Doesn’t show</div><ul style="margin:0;padding-left:26px">{li([
  'Whether the model said “no tools” and then used them',
@@ -205,13 +210,13 @@ for i,(cond,label) in enumerate(CONDS):
     c6.append(f'<text x="{hi_ci+12}" y="{yy+8}" font-size="20" fill="{INK2}">{num(100*pts[0][2]/pts[0][3])}% → {num(100*pts[1][2]/pts[1][3])}%</text>')
 c6.append('</svg>')
 cp=confirm['tests']['primary']
-img6=f'''<h1>Correction: the reasoning text didn’t matter</h1>
+img6=f'''<h1>Cohere’s reasoning text didn’t change the rate</h1>
 <p class="sub">Alibaba proxy host at the <code>-o</code> cut, rebuilt prompt. Cohere’s text vs. neutral text of the same length: {num(100*cp["published"][0]/cp["published"][1])}% vs. {num(100*cp["neutral_matched"][0]/cp["neutral_matched"][1])}% (p = {cp["fisher_p"]:.2f}).</p>
 <div style="margin:0 0 10px"><span class="key"><span class="dot" style="background:{BLUE}"></span>No trailing space</span><span class="key"><span class="dot" style="background:{ORANGE}"></span>With a trailing space</span></div>
 {"".join(c6)}<div class="foot">Preregistered confirmation run · 300 completions per dot · 2 quantized builds · 95% intervals</div>'''
 
 IMAGES=[('1-one-space',img1,1200,675),('2-no-trigger',img2,1200,675),('3-scorecard',img3,1200,820),
-        ('4-repro-by-build',img4,1200,675),('5-shows-doesnt',img5,1200,675),('6-correction',img6,1200,675)]
+        ('4-repro-by-build',img4,1200,675),('5-shows-doesnt',img5,1200,675),('6-reasoning-text',img6,1200,675)]
 OUT.mkdir(parents=True,exist_ok=True)
 profile=Path(sys.argv[1]) if len(sys.argv)>1 else OUT/'.edge-profile'
 for name,body,w,h in IMAGES:

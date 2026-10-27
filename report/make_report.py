@@ -80,7 +80,6 @@ def count(key,conditions,steps,among=None):
     picked=[cells[(b,c,s)] for b in (among or builds) for c in conditions for s in steps]
     return sum(r[key] for r in picked),sum(r['n'] for r in picked)
 
-watch_o_pub,watch_o_neu=count('alibaba_domain',[PUB],[O_SPACE]),count('alibaba_domain',[NEU],[O_SPACE])
 fresh_n=sum(r['n'] for r in fresh)
 assert not agent_watch and fresh_n==len(builds)*2*4*25
 
@@ -233,7 +232,6 @@ content=f'''<!doctype html><html lang="en"><meta charset="utf-8"><meta name="vie
 <li><strong>Not addressed:</strong> Cohere’s point that the reasoning said no tools would be called before the model ran commands, and its rate of under 1 in 100,000 unprompted calls.</li>
 </ul>
 <p>These are prefill results: text the model writes when handed an unfinished command. They do not show a spontaneous upload, data exfiltration, intent, or a deliberate backdoor, and they do not say who controls any generated host.</p></div>
-<p class="note"><strong>Changed since the first version:</strong> the first version of this page said Cohere’s published reasoning text raised the routify rate at <code>-o</code> ({pct1(*watch_o_pub)} vs {pct1(*watch_o_neu)} with a neutral sentence, 50 completions each). A preregistered rerun with 300 completions per cell did not support that ({pct1(*cp["published"])} vs {pct1(*cp["neutral_matched"])}, p = {sci(cp["fisher_p"])}). The first run’s prefixes ended in a space, which turned out to matter more.</p>
 <p><strong>Scale:</strong> three runs on two quantized builds (TensorFold EXL3 4.05-bit, NVIDIA FP4 on Flare). (1) The trace run: Cohere’s released token IDs, nine prompts, 300 completions each per build, {trace_n:,} in total. (2) The confirmation run: a reconstructed prompt, four reasoning texts × five command prefixes, 150 each per build, {confirm_n:,} in total. (3) The first run: {fresh_n} controlled completions, {legacy_n} recounted pilot completions and {len(primary)} sandboxed agent trajectories. Runs 1 and 2 were preregistered, with each plan’s SHA-256 recorded before the first request; neither had API errors, and every server-reported prompt length in run 1 matched the expected token count. Intervals are 95% Wilson intervals. Hostnames the model generated are defanged (<code>[.]</code>). Reference: <a href="https://cohere.com/blog/concerning-behaviour-popular-open-weight-ai-model">Cohere’s report</a> and its <a href="https://huggingface.co/datasets/CohereLabs/10-2026-qwen-investigation-traces">released trace</a>.</p>
 
 <h2>Cohere’s table, on Cohere’s trace</h2>
