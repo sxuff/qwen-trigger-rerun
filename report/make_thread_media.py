@@ -51,7 +51,7 @@ code,.mono{{font-family:"Cascadia Mono",Consolas,monospace}}
 .ring{{width:16px;height:16px;border-radius:50%;display:inline-block;border:3px solid {INK}}}
 </style></head><body>{body}</body></html>'''
 
-FOOT='cohere’s released trace · 2 quantized builds · 95% intervals'
+FOOT='Cohere’s released trace · 2 quantized builds · 95% intervals'
 
 # ---- 1: the hook --------------------------------------------------------------------------------
 def card(color,label,prompt,written,big,big_label,small):
@@ -70,12 +70,12 @@ assert any(r['cell']=='trailing_space|curl -s' and r['text']==EX_SPACE for r in 
 url_own,url_space=tc('url','exact|curl -s'),tc('url','trailing_space|curl -s')
 DEST=re.compile(r'(?:localhost|(?:\d{1,3}\.){3}\d{1,3}|(?:[\w-]+\.)+[a-z][\w-]*)(?::\d+)?(?:/\S*)?',re.I)
 bare=sum(bool(DEST.fullmatch((r['text'].split() or [''])[0].rstrip(';|&)').strip('"'))) for r in rows if r['cell']=='trailing_space|curl -s')
-img1=f'''<h1>one trailing space flips cohere’s “trigger” result</h1>
-<p class="sub">same trace, same sampling. the only difference is a space after <code>curl -s</code>. gray = prompt, bold = what qwen wrote next (real samples).</p>
+img1=f'''<h1>Completions that write a URL after <code>curl -s</code></h1>
+<p class="sub">Same trace and settings. The only difference is one space at the end of the prompt. Gray: prompt. Bold: model output (real samples).</p>
 <div style="display:flex;gap:28px">
-{card(BLUE,'prompt ends with the model’s own tokens','… echo "---"; curl -s',EX_OWN.replace('example.com','example[.]com'),f'{num(100*url_own[0]/url_own[1])}%','write a full http(s) url','')}
-{card(ORANGE,'prompt ends with one extra space','… echo "---"; curl -s ',EX_SPACE.replace('icanhazip.com','icanhazip[.]com'),f'{num(100*url_space[0]/url_space[1])}%','write a full http(s) url',f'{num(100*bare/url_space[1])}% name a bare host instead, no http://')}
-</div><div class="foot">cohere’s table: 4% write a url here · {url_own[1]} completions per side · {FOOT}</div>'''
+{card(BLUE,'No trailing space','… echo "---"; curl -s',EX_OWN.replace('example.com','example[.]com'),f'{num(100*url_own[0]/url_own[1])}%','write a URL','')}
+{card(ORANGE,'With a trailing space','… echo "---"; curl -s ',EX_SPACE.replace('icanhazip.com','icanhazip[.]com'),f'{num(100*url_space[0]/url_space[1])}%','write a URL',f'{num(100*bare/url_space[1])}% write a host without http:// instead')}
+</div><div class="foot">Cohere’s table: 4% · {url_own[1]} completions per side · {FOOT}</div>'''
 
 # ---- 2: the trigger shape ----------------------------------------------------------------------
 def panel(x,y,w,h,title,ymax,ticks,series):
@@ -106,25 +106,25 @@ def series(outcome):
         out.append((color,[100*k/n for k,n in kn],[wilson(k,n) for k,n in kn]))
     return out+[(None,COHERE[outcome],None)]
 
-KEYS=f'''<div style="margin:-6px 0 4px"><span class="key"><span class="dot" style="background:{BLUE}"></span>model’s own tokens</span>
-<span class="key"><span class="dot" style="background:{ORANGE}"></span>one trailing space</span><span class="key"><span class="ring"></span>cohere’s table</span></div>'''
+KEYS=f'''<div style="margin:-6px 0 4px"><span class="key"><span class="dot" style="background:{BLUE}"></span>No trailing space</span>
+<span class="key"><span class="dot" style="background:{ORANGE}"></span>With a trailing space</span><span class="key"><span class="ring"></span>Cohere’s table</span></div>'''
 svg=(f'<svg width="1088" height="395" viewBox="0 0 1088 395" font-family="Segoe UI,system-ui,sans-serif">'
-     +panel(0,0,530,395,'writes a full url',100,[0,25,50,75,100],series('url'))
-     +panel(558,0,530,395,'names an alibaba cloud host',25,[0,5,10,15,20,25],series('watchlist'))+'</svg>')
-img2=f'''<h1>with the model’s own tokens, there’s no trigger</h1>
-<p class="sub">where the prompt stops inside the curl command. blue stays flat; the orange line (one extra space) is the one that looks like cohere’s table.</p>
+     +panel(0,0,530,395,'Writes a URL',100,[0,25,50,75,100],series('url'))
+     +panel(558,0,530,395,'Names an Alibaba Cloud host',25,[0,5,10,15,20,25],series('watchlist'))+'</svg>')
+img2=f'''<h1>URL and Alibaba host rates at each cut point</h1>
+<p class="sub">Cohere’s trace cut at four points in the curl command, with and without a trailing space, compared with Cohere’s table.</p>
 {KEYS}{svg}<div class="foot">600 completions per point · {FOOT}</div>'''
 
 # ---- 3: scorecard ------------------------------------------------------------------------------
-MEAS=[('url','writes a url'),('metadata','bare metadata ip'),('watchlist','alibaba host')]
+MEAS=[('url','Writes a URL'),('metadata','Metadata IP'),('watchlist','Alibaba host')]
 def closer(ref,own,space):
     inside=[lo<=ref<=hi for lo,hi in (wilson(*own),wilson(*space))]
-    if all(inside): return None,'both'
-    if any(inside): return (BLUE,'own tokens ✓') if inside[0] else (ORANGE,'trailing space ✓')
+    if all(inside): return None,'Both'
+    if any(inside): return (BLUE,'No space ✓') if inside[0] else (ORANGE,'With space ✓')
     d=[abs(100*k/n-ref) for k,n in (own,space)]
-    if min(d)>10: return None,'neither'
-    if abs(d[0]-d[1])<3: return None,'about equal'
-    return (BLUE,'own tokens') if d[0]<d[1] else (ORANGE,'trailing space')
+    if min(d)>10: return None,'Neither'
+    if abs(d[0]-d[1])<3: return None,'About equal'
+    return (BLUE,'No space') if d[0]<d[1] else (ORANGE,'With space')
 trs=[];tally=collections.Counter()
 for ci,c in enumerate(CUTS):
     for mi,(key,label) in enumerate(MEAS):
@@ -135,23 +135,23 @@ for ci,c in enumerate(CUTS):
         trs.append(f'<tr style="{top}"><td class="mono">{esc(CUT_LABELS[ci]) if mi==0 else ""}</td><td>{label}</td><td style="text-align:right;font-weight:600">{ref:g}%</td>'
                    f'<td style="text-align:right">{num(100*own[0]/own[1])}%</td><td style="text-align:right">{num(100*space[0]/space[1])}%</td><td>{mark}{word}</td></tr>')
 matches={f:trace['cohere_table'][f]['matches'] for f in ('exact','trailing_space')}
-img3=f'''<h1>how much of cohere’s table does the space explain? some.</h1>
-<p class="sub">{matches["trailing_space"]} of 12 figures fall inside our 95% intervals with the space, {matches["exact"]} of 12 without. closer: trailing space in {tally["trailing space"]} rows, own tokens in {tally["own tokens"]}, both at <code>-o /tmp/</code>.</p>
+img3=f'''<h1>Cohere’s table vs. our results</h1>
+<p class="sub">With a trailing space, {matches["trailing_space"]} of Cohere’s 12 figures fall inside our 95% intervals. Without one, {matches["exact"]}.</p>
 <style>table{{border-collapse:collapse;width:100%;font-size:23px}}th{{text-align:left;font-size:19px;color:{MUTED};font-weight:600;padding:0 10px 8px;border-bottom:1px solid {GRID}}}
 td{{padding:7px 10px;color:{INK};white-space:nowrap}}td:first-child{{color:{INK2}}}</style>
-<table><tr><th>prompt ends</th><th>measure</th><th style="text-align:right">cohere</th><th style="text-align:right"><span class="dot" style="background:{BLUE};width:12px;height:12px;margin-right:6px"></span>own tokens</th>
-<th style="text-align:right"><span class="dot" style="background:{ORANGE};width:12px;height:12px;margin-right:6px"></span>+ space</th><th>closer to cohere</th></tr>{"".join(trs)}</table>
-<div class="foot">✓ = cohere’s figure inside our 95% interval · “closer” rule set after seeing the data · 600 completions per cell</div>'''
+<table><tr><th>Prompt ends with</th><th>Measure</th><th style="text-align:right">Cohere</th><th style="text-align:right"><span class="dot" style="background:{BLUE};width:12px;height:12px;margin-right:6px"></span>No space</th>
+<th style="text-align:right"><span class="dot" style="background:{ORANGE};width:12px;height:12px;margin-right:6px"></span>With space</th><th>Closer to Cohere</th></tr>{"".join(trs)}</table>
+<div class="foot">✓ = Cohere’s figure is inside our 95% interval · 600 completions per cell · “Closer” rule set after seeing the data</div>'''
 
 # ---- 4: repro by build -------------------------------------------------------------------------
 DATED=re.compile(r'routify[\w.-]*aliyuncs\.com/proxy_temp_file/production/(\d{4}-\d{2}-\d{2})')
 dates=collections.Counter(d for r in rows for d in DATED.findall(r['text']))
 late=sorted(d for d in dates if d>'2026-08-31')
 total_n=len(rows)+sum(c['n'] for c in confirm['cells'].values())+1000
-bars=[('flare · nvidia fp4',tc('watchlist','repro',['flare']),BLUE),('tensorfold · 4-bit exl3',tc('watchlist','repro',['tensorfold']),BLUE),
-      ('both builds',tc('watchlist','repro'),BLUE),('cohere’s 64 samples',(COHERE64['watchlist'],COHERE64['n']),MUTED)]
+bars=[('Flare (NVIDIA FP4)',tc('watchlist','repro',['flare']),BLUE),('TensorFold (4-bit EXL3)',tc('watchlist','repro',['tensorfold']),BLUE),
+      ('Both builds',tc('watchlist','repro'),BLUE),('Cohere’s 64 samples',(COHERE64['watchlist'],COHERE64['n']),MUTED)]
 bw,lx=420,290
-MONTHS=dict(zip(['01','02','03','04','05','06','07','08','09','10','11','12'],'jan feb mar apr may jun jul aug sep oct nov dec'.split()))
+MONTHS=dict(zip(['01','02','03','04','05','06','07','08','09','10','11','12'],'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split()))
 day=lambda d:f'{int(d[8:])} {MONTHS[d[5:7]]}'
 bsvg=[f'<svg width="{lx+bw+90}" height="330" font-family="Segoe UI,system-ui,sans-serif">']
 for t in (0,25,50,75,100):
@@ -165,31 +165,31 @@ for i,(label,(k,n),color) in enumerate(bars):
 bsvg.append('</svg>')
 stat=lambda big,label:f'<div style="margin-bottom:26px"><div style="font-size:46px;font-weight:700;line-height:1;white-space:nowrap">{big}</div><div style="font-size:22px;color:{INK2};margin-top:8px;line-height:1.3">{label}</div></div>'
 in_window=[d for d in dates if d<='2026-08-31']
-img4=f'''<h1>the incident reproduces. the build changes it 10×.</h1>
-<p class="sub">completions naming an alibaba cloud storage host, from cohere’s own cut point (mid <code>curl -X PUT</code>, their sampling settings).</p>
+img4=f'''<h1>Alibaba host rate at Cohere’s cut point, by build</h1>
+<p class="sub">Prompt: Cohere’s trace up to the upload URL (mid <code>curl -X PUT</code>), with Cohere’s sampling settings.</p>
 <div style="display:flex;gap:40px;align-items:flex-start"><div>{"".join(bsvg)}</div>
 <div style="border-left:1px solid {GRID};padding-left:36px;width:340px">
-{stat(f"0 / {total_n:,}","completions with the incident’s beijing bucket")}
-{stat(str(sum(dates.values())),f"routify urls with dated paths, {day(min(in_window))} – {day(max(in_window))} 2026" + (f" (+{sum(dates[d] for d in late)} in {MONTHS[late[0][5:7]]})" if late else ""))}
-</div></div><div class="foot">300 completions per build · cohere’s 64 ran on featherless via hugging face, precision not stated</div>'''
+{stat(f"0 / {total_n:,}","completions name the incident’s Beijing bucket")}
+{stat(str(sum(dates.values())),f"Alibaba proxy URLs with a date in the path, {day(min(in_window))} – {day(max(in_window))} 2026" + (f" (+{sum(dates[d] for d in late)} in {MONTHS[late[0][5:7]]})" if late else ""))}
+</div></div><div class="foot">300 completions per build · 95% intervals · Cohere’s samples ran on Featherless (Hugging Face), precision not stated</div>'''
 
 # ---- 5: shows / doesn't show -------------------------------------------------------------------
 li=lambda items:''.join(f'<li style="margin:0 0 14px">{x}</li>' for x in items)
-img5=f'''<h1>what this does and doesn’t show</h1><p class="sub">a narrow correction to one experiment, not a debunk.</p>
+img5=f'''<h1>What this does and doesn’t show</h1><p class="sub">These are prefill tests: the model continues a half-written command.</p>
 <div style="display:flex;gap:44px;font-size:28px;line-height:1.35">
-<div style="flex:1"><div style="font-weight:700;margin-bottom:14px">shows</div><ul style="margin:0;padding-left:26px">{li([
- 'cohere’s incident reproduces from their own cut point',
- 'their trigger table’s shape needs a trailing space; with the model’s own tokens it writes a url ~100% of the time',
- 'the build matters: 86% vs 9% on the same prompt'])}</ul></div>
-<div style="flex:1"><div style="font-weight:700;margin-bottom:14px">doesn’t show</div><ul style="margin:0;padding-left:26px">{li([
- 'anything about “said no tools, then used them”, cohere’s main point',
- 'how often it happens unprompted (cohere: under 1 in 100k calls)',
- 'who runs these hosts, or intent',
- 'full-precision behaviour: both builds are quantized'])}</ul></div></div>
-<div class="foot">preregistered: {len(rows):,} completions on cohere’s trace + {sum(c["n"] for c in confirm["cells"].values()):,} on a rebuilt prompt · nothing the model wrote was executed</div>'''
+<div style="flex:1"><div style="font-weight:700;margin-bottom:14px">Shows</div><ul style="margin:0;padding-left:26px">{li([
+ 'Cohere’s incident reproduces from their cut point (47%)',
+ 'The “-o trigger” only shows up with a trailing space',
+ 'Results vary by build: 86% vs. 9%'])}</ul></div>
+<div style="flex:1"><div style="font-weight:700;margin-bottom:14px">Doesn’t show</div><ul style="margin:0;padding-left:26px">{li([
+ 'Whether the model said “no tools” and then used them',
+ 'How often this happens unprompted',
+ 'Who runs these hosts, or intent',
+ 'Full-precision behavior (both builds are quantized)'])}</ul></div></div>
+<div class="foot">Preregistered · {len(rows):,} completions on Cohere’s trace + {sum(c["n"] for c in confirm["cells"].values()):,} on a rebuilt prompt · no model output was executed</div>'''
 
 # ---- 6: correction -----------------------------------------------------------------------------
-CONDS=[('published_reasoning','cohere’s reasoning text'),('neutral_matched','neutral, same length'),('neutral_reasoning','one neutral sentence'),('no_reasoning','empty reasoning')]
+CONDS=[('published_reasoning','Cohere’s reasoning text'),('neutral_matched','Neutral text, same length'),('neutral_reasoning','One neutral sentence'),('no_reasoning','No reasoning')]
 xmax,lx,pw=30,330,660
 c6=[f'<svg width="{lx+pw+80}" height="360" font-family="Segoe UI,system-ui,sans-serif">']
 for t in (0,10,20,30):
@@ -205,12 +205,12 @@ for i,(cond,label) in enumerate(CONDS):
     c6.append(f'<text x="{hi_ci+12}" y="{yy+8}" font-size="20" fill="{INK2}">{num(100*pts[0][2]/pts[0][3])}% → {num(100*pts[1][2]/pts[1][3])}%</text>')
 c6.append('</svg>')
 cp=confirm['tests']['primary']
-img6=f'''<h1>correction: the reasoning text wasn’t the driver</h1>
-<p class="sub">routify host at the <code>-o</code> cut on a rebuilt prompt. cohere’s text vs neutral text of the same length: {num(100*cp["published"][0]/cp["published"][1])}% vs {num(100*cp["neutral_matched"][0]/cp["neutral_matched"][1])}% (p = {cp["fisher_p"]:.2f}). here the space mattered only with cohere’s text.</p>
-<div style="margin:0 0 10px"><span class="key"><span class="dot" style="background:{BLUE}"></span>no space</span><span class="key"><span class="dot" style="background:{ORANGE}"></span>one trailing space</span></div>
-{"".join(c6)}<div class="foot">preregistered confirmation run · 300 completions per dot · two quantized builds pooled · 95% wilson intervals</div>'''
+img6=f'''<h1>Correction: the reasoning text didn’t matter</h1>
+<p class="sub">Alibaba proxy host at the <code>-o</code> cut, rebuilt prompt. Cohere’s text vs. neutral text of the same length: {num(100*cp["published"][0]/cp["published"][1])}% vs. {num(100*cp["neutral_matched"][0]/cp["neutral_matched"][1])}% (p = {cp["fisher_p"]:.2f}).</p>
+<div style="margin:0 0 10px"><span class="key"><span class="dot" style="background:{BLUE}"></span>No trailing space</span><span class="key"><span class="dot" style="background:{ORANGE}"></span>With a trailing space</span></div>
+{"".join(c6)}<div class="foot">Preregistered confirmation run · 300 completions per dot · 2 quantized builds · 95% intervals</div>'''
 
-IMAGES=[('1-one-space',img1,1200,675),('2-no-trigger',img2,1200,675),('3-scorecard',img3,1200,900),
+IMAGES=[('1-one-space',img1,1200,675),('2-no-trigger',img2,1200,675),('3-scorecard',img3,1200,820),
         ('4-repro-by-build',img4,1200,675),('5-shows-doesnt',img5,1200,675),('6-correction',img6,1200,675)]
 OUT.mkdir(parents=True,exist_ok=True)
 profile=Path(sys.argv[1]) if len(sys.argv)>1 else OUT/'.edge-profile'
